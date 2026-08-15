@@ -13,13 +13,11 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-            title: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Birdle'),
-            )
-          ),
-          body: Center(child: GamePage())),
+        appBar: AppBar(
+          title: Align(alignment: Alignment.centerLeft, child: Text('Birdle')),
+        ),
+        body: Center(child: GamePage()),
+      ),
     );
   }
 }
@@ -55,7 +53,7 @@ class Tile extends StatelessWidget {
 }
 
 class GamePage extends StatelessWidget {
-  GamePage ({super.key});
+  GamePage({super.key});
 
   final Game _game = Game();
 
@@ -63,7 +61,7 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column (
+      child: Column(
         spacing: 5.0,
         children: [
           for (final guess in _game.guesses)
@@ -72,9 +70,93 @@ class GamePage extends StatelessWidget {
               children: [
                 for (final letter in guess) Tile(letter.char, letter.type),
               ],
-            )
+            ),
+          GuessInput(
+            onSubmitGuess: (guess) {
+              print(guess);
+            },
+          ),
         ],
-      )
+      ),
     );
   }
 }
+
+class GuessInput extends StatelessWidget {
+  GuessInput({super.key, required this.onSubmitGuess});
+
+  final void Function(String) onSubmitGuess;
+
+  final TextEditingController _textEditingController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  void _onSubmit() {
+    onSubmitGuess(_textEditingController.text.trim());
+    _textEditingController.clear();
+    _focusNode.requestFocus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              maxLength: 5,
+              focusNode: _focusNode,
+              autofocus: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(35)),
+                ),
+              ),
+              controller: _textEditingController,
+              onSubmitted: (_) {
+                _onSubmit();
+              },
+            ),
+          ),
+        ),
+        Expanded(child: Container()),
+        IconButton(
+          padding: EdgeInsets.zero,
+          icon: const Icon(Icons.arrow_circle_up),
+          onPressed: () {
+            _onSubmit();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+// @override
+// Widget build(BuildContext context) {
+//   return Row(
+//     children: [
+//       Expanded(
+//         child: Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: TextField(
+//             maxLength: 5,
+//             decoration: InputDecoration(
+//               border: OutlineInputBorder(
+//                 borderRadius: BorderRadius.all(Radius.circular(35)),
+//               ),
+//             ),
+//             controller: _textEditingController,
+//             autofocus: true,
+//             focusNode: _focusNode,
+//             onSubmitted: (_) {
+//               onSubmitGuess(_textEditingController.text.trim());
+//               _textEditingController.clear();
+//               _focusNode.requestFocus();
+//             },
+//           ),
+//         ),
+//       ),
+//     ],
+//   );
+// }
