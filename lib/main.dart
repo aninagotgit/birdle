@@ -14,7 +14,12 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Align(alignment: Alignment.centerLeft, child: Text('Birdle')),
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          title: Text('Birdle'),
+          centerTitle: true,
+          leading: Icon(Icons.arrow_back),
+          actions: [Icon(Icons.menu)],
         ),
         body: Center(child: GamePage()),
       ),
