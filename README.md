@@ -28,3 +28,4 @@ dart devtools
 # Notes
 
 - Always extend StatelessWidget unless you have a reason not to
+- StatefulWidget if the widget needs to change in appearance
