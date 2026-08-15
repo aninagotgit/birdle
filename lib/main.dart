@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'game.dart';
 
-void main() {
-  runApp(const MainApp());
-}
+void main() => runApp(const MainApp());
+
+final _router = GoRouter(
+  routes: [GoRoute(path: '/', builder: (context, state) => const HomeScreen())],
+);
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          title: Text('Birdle'),
-          centerTitle: true,
-          leading: Icon(Icons.arrow_back),
-          actions: [Icon(Icons.menu)],
-        ),
-        body: Center(child: GamePage()),
+    return MaterialApp.router(routerConfig: _router);
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        title: Text('Birdle'),
+        centerTitle: true,
+        leading: Icon(Icons.arrow_back),
+        actions: [Icon(Icons.menu)],
       ),
+      body: Center(child: GamePage()),
     );
   }
 }
