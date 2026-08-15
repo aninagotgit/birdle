@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'about.dart';
 import 'game.dart';
 
 void main() => runApp(const MainApp());
 
 final _router = GoRouter(
-  routes: [GoRoute(path: '/', builder: (context, state) => const HomeScreen())],
+  routes: [
+    GoRoute(
+        path: '/',
+        builder: (context, state) => const HomeScreen()),
+    GoRoute(
+      path: '/about',
+      builder: (context, state) => const AboutScreen(),
+    )
+  ],
 );
 
 class MainApp extends StatelessWidget {
@@ -30,7 +39,14 @@ class HomeScreen extends StatelessWidget {
         title: Text('Birdle'),
         centerTitle: true,
         leading: Icon(Icons.arrow_back),
-        actions: [Icon(Icons.menu)],
+        actions: [
+          IconButton(
+              onPressed: () {
+                context.go('/about');
+              },
+              icon: const Icon(Icons.menu)
+          )
+        ],
       ),
       body: Center(child: GamePage()),
     );
@@ -70,7 +86,7 @@ class Tile extends StatelessWidget {
 }
 
 class GamePage extends StatefulWidget {
-  GamePage({super.key});
+  const GamePage({super.key});
 
   @override
   State<StatefulWidget> createState() => _GamePageState();
@@ -160,3 +176,4 @@ class GuessInput extends StatelessWidget {
     );
   }
 }
+
