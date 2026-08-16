@@ -109,68 +109,51 @@ class _GamePageState extends State<GamePage> {
                   ),
               ],
             ),
-          GuessInputUse(game: _game),
+          GuessInput(
+            onSubmitGuess: (String guess) {
+              setState(() {
+                _game.guess(guess);
+              });
+              if (_game.didWin) {
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      WinPopup(winningBird: _game.hiddenWord.toString()),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
   }
 }
 
-class GuessInputUse extends StatelessWidget {
-  GuessInputUse({super.key, required this._game});
-
-  final Game _game;
-
-  @override
-  Widget build(BuildContext context) {
-    return GuessInput(
-      onSubmitGuess: (String guess) {
-        setState(() {
-          _game.guess(guess);
-        });
-        if (_game.didWin) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              final String image = switch (_game.hiddenWord.toString()) {
-                'goose' => 'assets/pixelGoose.webp',
-                'stork' => 'assets/pixelStork.gif',
-                'robin' => 'assets/pixelRobin.gif',
-                _ => throw UnimplementedError(
-                  'No bird gif loaded for your bird',
-                ),
-              };
-
-              return AlertDialog(
-                title: const Text('You WON!'),
-                content: Column(children: [Image.asset(image)]),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      },
-    );
-  }
-}
-
-class GuessInput extends StatelessWidget {
-  GuessInput({super.key, required this.onSubmitGuess});
+class GuessInput extends StatefulWidget {
+  const GuessInput({super.key, required this.onSubmitGuess});
 
   final void Function(String) onSubmitGuess;
 
+  @override
+  State<GuessInput> createState() => _GuessInputState();
+}
+
+class _GuessInputState extends State<GuessInput> {
   final TextEditingController _textEditingController = TextEditingController();
+
   final FocusNode _focusNode = FocusNode();
 
   void _onSubmit() {
-    onSubmitGuess(_textEditingController.text.trim());
+    widget.onSubmitGuess(_textEditingController.text.trim());
     _textEditingController.clear();
     _focusNode.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -199,9 +182,39 @@ class GuessInput extends StatelessWidget {
         IconButton(
           padding: EdgeInsets.zero,
           icon: const Icon(Icons.arrow_circle_up),
-          onPressed: () {
-            _onSubmit();
-          },
+          onPressed: _onSubmit,
+        ),
+      ],
+    );
+  }
+}
+
+class WinPopup extends StatelessWidget {
+  const WinPopup({super.key, required this.winningBird});
+
+  final String winningBird;
+
+  @override
+  Widget build(BuildContext context) {
+    final (String image, String description) = switch (winningBird) {
+      'goose' => ('assets/pixelGoose.webp', 'A bird that honks.\n'),
+      'stork' => ('assets/pixelStork.gif', 'A bird with long legs.\n'),
+      'robin' => ('assets/pixelRobin.gif', 'A bird that sings songs\n'),
+      _ => throw UnimplementedError('No bird gif loaded for your bird'),
+    };
+
+    return AlertDialog(
+      title: Center(child: Text('You WON!')),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [Text(winningBird), Text(description), Image.asset(image)],
+      ),
+      actions: [
+        Center(
+          child: TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Play again'),
+          ),
         ),
       ],
     );
