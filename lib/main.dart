@@ -38,7 +38,6 @@ class HomeScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         title: Text('Birdle'),
         centerTitle: true,
-        leading: Icon(Icons.arrow_back),
         actions: [
           IconButton(
               onPressed: () {

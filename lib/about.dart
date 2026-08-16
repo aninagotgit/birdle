@@ -34,8 +34,12 @@ Widget getAboutPage() {
       child: Column(
         children: [
           Text(
-            'This is a game about birds! \n'
-            'You have to guess what bird I\'m thinking of...',
+            'This is a game about birds!\n'
+            'You have to guess what bird I\'m thinking of.\n'
+            'A green tile means you guessed the letter correctly in the correct place.\n'
+            'A orange tile means the letter is correct, but in the wrong place.\n'
+            'A red tile means the letter is not in the word.\n'
+            'You have 5 guesses.',
           ),
           Text('Here are the valid bird names you can guess:'),
           Expanded(child: Scroller(list: allLegalGuesses)),
