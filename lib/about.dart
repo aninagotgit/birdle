@@ -61,6 +61,7 @@ class Scroller extends StatelessWidget {
       itemCount: _list.length,
       itemBuilder: (BuildContext context, int index) {
         return Slidable(
+          key: const ValueKey(0),
           child: SizedBox(height: 50, child: Center(child: Text(_list[index]))),
           startActionPane: ActionPane(
             // A motion is a widget used to control how the pane animates.
@@ -70,14 +71,18 @@ class Scroller extends StatelessWidget {
               // A SlidableAction can have an icon and/or a label.
               SlidableAction(
                 onPressed: (context) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => PicPopup(bird: _list[index]),
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Pressed info ${_list[index]}')),
                   );
                 },
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
-                icon: Icons.info,
-                label: 'Info',
+                icon: Icons.photo,
+                label: 'View',
               ),
             ],
           ),
@@ -88,6 +93,23 @@ class Scroller extends StatelessWidget {
             children: [
               SlidableAction(
                 onPressed: (context) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Delete ${_list[index]}?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => context.pop(),
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => context.pop(),
+                          //todo delete
+                          child: Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Pressed delete ${_list[index]}')),
                   );
@@ -100,11 +122,39 @@ class Scroller extends StatelessWidget {
             ],
           ),
         );
-        // return SizedBox(height: 30, child: Center(child: Text(_list[index])));
       },
       separatorBuilder: (context, index) {
         return const Divider(color: Colors.grey);
       },
+    );
+  }
+}
+
+class PicPopup extends StatelessWidget {
+  const PicPopup({super.key, required this.bird});
+
+  final String bird;
+
+  @override
+  Widget build(BuildContext context) {
+    final String image = 'assets/${bird}.gif';
+
+    return AlertDialog(
+      title: Center(child: Text('${bird}')),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [Image.asset(image)],
+      ),
+      actions: [
+        Center(
+          child: TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Dismiss'),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -118,7 +118,7 @@ class _GamePageState extends State<GamePage> {
                 showDialog(
                   context: context,
                   builder: (context) => WinPopup(
-                    winningBird: _game.hiddenWord.toString(),
+                    bird: _game.hiddenWord.toString(),
                     onPlayAgain: () {
                       setState(() {
                         _game.resetGame();
@@ -201,19 +201,19 @@ class _GuessInputState extends State<GuessInput> {
 class WinPopup extends StatelessWidget {
   const WinPopup({
     super.key,
-    required this.winningBird,
+    required this.bird,
     required this.onPlayAgain,
   });
 
-  final String winningBird;
+  final String bird;
   final VoidCallback onPlayAgain;
 
   @override
   Widget build(BuildContext context) {
-    final (String image, String description) = switch (winningBird) {
-      'goose' => ('assets/pixelGoose.webp', 'A bird that honks.\n'),
-      'stork' => ('assets/pixelStork.gif', 'A bird with long legs.\n'),
-      'robin' => ('assets/pixelRobin.gif', 'A bird that sings songs\n'),
+    final (String image, String description) = switch (bird) {
+      'goose' => ('assets/goose.webp', 'A bird that honks.\n'),
+      'stork' => ('assets/stork.gif', 'A bird with long legs.\n'),
+      'robin' => ('assets/robin.gif', 'A bird that sings songs\n'),
       _ => throw UnimplementedError('No bird gif loaded for your bird'),
     };
 
@@ -221,7 +221,7 @@ class WinPopup extends StatelessWidget {
       title: Center(child: Text('You WON!')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [Text(winningBird), Text(description), Image.asset(image)],
+        children: [Text(bird), Text(description), Image.asset(image)],
       ),
       actions: [
         Center(
