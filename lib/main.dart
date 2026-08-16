@@ -8,13 +8,8 @@ void main() => runApp(const MainApp());
 
 final _router = GoRouter(
   routes: [
-    GoRoute(
-        path: '/',
-        builder: (context, state) => const HomeScreen()),
-    GoRoute(
-      path: '/about',
-      builder: (context, state) => const AboutScreen(),
-    )
+    GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+    GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
   ],
 );
 
@@ -40,11 +35,11 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {
-                context.push('/about');
-              },
-              icon: const Icon(Icons.menu)
-          )
+            onPressed: () {
+              context.push('/about');
+            },
+            icon: const Icon(Icons.menu),
+          ),
         ],
       ),
       body: Center(child: GamePage()),
@@ -119,6 +114,23 @@ class _GamePageState extends State<GamePage> {
               setState(() {
                 _game.guess(guess);
               });
+              if (_game.didWin) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('You WON!'),
+                    content: Column(
+                      children: [Image.asset('assets/pixelGoose.webp')],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              }
             },
           ),
         ],
@@ -175,4 +187,3 @@ class GuessInput extends StatelessWidget {
     );
   }
 }
-
