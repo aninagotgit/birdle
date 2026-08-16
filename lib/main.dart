@@ -117,8 +117,14 @@ class _GamePageState extends State<GamePage> {
               if (_game.didWin) {
                 showDialog(
                   context: context,
-                  builder: (context) =>
-                      WinPopup(winningBird: _game.hiddenWord.toString()),
+                  builder: (context) => WinPopup(
+                    winningBird: _game.hiddenWord.toString(),
+                    onPlayAgain: () {
+                      setState(() {
+                        _game.resetGame();
+                      });
+                    },
+                  ),
                 );
               }
             },
@@ -190,9 +196,14 @@ class _GuessInputState extends State<GuessInput> {
 }
 
 class WinPopup extends StatelessWidget {
-  const WinPopup({super.key, required this.winningBird});
+  const WinPopup({
+    super.key,
+    required this.winningBird,
+    required this.onPlayAgain,
+  });
 
   final String winningBird;
+  final VoidCallback onPlayAgain;
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +223,10 @@ class WinPopup extends StatelessWidget {
       actions: [
         Center(
           child: TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              onPlayAgain();
+            },
             child: const Text('Play again'),
           ),
         ),
