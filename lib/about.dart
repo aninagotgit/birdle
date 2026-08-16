@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'game.dart';
+
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
@@ -14,7 +16,7 @@ class AboutScreen extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            context.go('/');
+            context.pop();
           },
           icon: const Icon(Icons.arrow_back),
         ),
@@ -27,45 +29,41 @@ class AboutScreen extends StatelessWidget {
 Widget getAboutPage() {
   return Padding(
     padding: const EdgeInsets.all(8.0),
-    child: Column(
-      children: [
-        Text(
-          'This is a game about birds! '
-          'You have to guess what bird I\'m thinking of...',
-        ),
-      ],
+    child: SizedBox(
+      width: 400,
+      child: Column(
+        children: [
+          Text(
+            'This is a game about birds! \n'
+            'You have to guess what bird I\'m thinking of...',
+          ),
+          Text('Here are the valid bird names you can guess:'),
+          Expanded(child: Scroller(list: allLegalGuesses)),
+        ],
+      ),
     ),
   );
 }
 
-// @override
-// Widget build(BuildContext context) {
-//   return Padding(
-//     padding: const EdgeInsets.all(8.0),
-//     child: Column(
-//       children: [
-//         for (final guess in _game.guesses)
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               for (var letter in guess)
-//                 Padding(
-//                   padding: const EdgeInsets.symmetric(
-//                     horizontal: 2.5,
-//                     vertical: 2.5,
-//                   ),
-//                   child: Tile(letter.char, letter.type),
-//                 ),
-//             ],
-//           ),
-//         GuessInput(
-//           onSubmitGuess: (String guess) {
-//             setState(() {
-//               _game.guess(guess);
-//             });
-//           },
-//         ),
-//       ],
-//     ),
-//   );
-// }
+class Scroller extends StatelessWidget {
+  const Scroller({super.key, required this._list});
+
+  final List<String> _list;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(8),
+      itemCount: _list.length,
+      itemBuilder: (BuildContext context, int index) {
+        return SizedBox(height: 50, child: Center(child: Text(_list[index])));
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          height: 1,
+          child: ColoredBox(color: Colors.blueGrey),
+        );
+      },
+    );
+  }
+}

@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                context.go('/about');
+                context.push('/about');
               },
               icon: const Icon(Icons.menu)
           )
