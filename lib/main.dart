@@ -109,32 +109,52 @@ class _GamePageState extends State<GamePage> {
                   ),
               ],
             ),
-          GuessInput(
-            onSubmitGuess: (String guess) {
-              setState(() {
-                _game.guess(guess);
-              });
-              if (_game.didWin) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('You WON!'),
-                    content: Column(
-                      children: [Image.asset('assets/pixelGoose.webp')],
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              }
-            },
-          ),
+          GuessInputUse(game: _game),
         ],
       ),
+    );
+  }
+}
+
+class GuessInputUse extends StatelessWidget {
+  GuessInputUse({super.key, required this._game});
+
+  final Game _game;
+
+  @override
+  Widget build(BuildContext context) {
+    return GuessInput(
+      onSubmitGuess: (String guess) {
+        setState(() {
+          _game.guess(guess);
+        });
+        if (_game.didWin) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              final String image = switch (_game.hiddenWord.toString()) {
+                'goose' => 'assets/pixelGoose.webp',
+                'stork' => 'assets/pixelStork.gif',
+                'robin' => 'assets/pixelRobin.gif',
+                _ => throw UnimplementedError(
+                  'No bird gif loaded for your bird',
+                ),
+              };
+
+              return AlertDialog(
+                title: const Text('You WON!'),
+                content: Column(children: [Image.asset(image)]),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      },
     );
   }
 }
