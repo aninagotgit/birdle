@@ -93,43 +93,45 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          for (final guess in _game.guesses)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (var letter in guess)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 2.5,
-                      vertical: 2.5,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            for (final guess in _game.guesses)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (var letter in guess)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 2.5,
+                        vertical: 2.5,
+                      ),
+                      child: Tile(letter.char, letter.type),
                     ),
-                    child: Tile(letter.char, letter.type),
-                  ),
-              ],
+                ],
+              ),
+            GuessInput(
+              onSubmitGuess: (String guess) {
+                setState(() {
+                  _game.guess(guess);
+                });
+                if (_game.didWin) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => WinPopup(
+                      bird: _game.hiddenWord.toString(),
+                      onPlayAgain: () {
+                        setState(() {
+                          _game.resetGame();
+                        });
+                      },
+                    ),
+                  );
+                }
+              },
             ),
-          GuessInput(
-            onSubmitGuess: (String guess) {
-              setState(() {
-                _game.guess(guess);
-              });
-              if (_game.didWin) {
-                showDialog(
-                  context: context,
-                  builder: (context) => WinPopup(
-                    bird: _game.hiddenWord.toString(),
-                    onPlayAgain: () {
-                      setState(() {
-                        _game.resetGame();
-                      });
-                    },
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -199,11 +201,7 @@ class _GuessInputState extends State<GuessInput> {
 }
 
 class WinPopup extends StatelessWidget {
-  const WinPopup({
-    super.key,
-    required this.bird,
-    required this.onPlayAgain,
-  });
+  const WinPopup({super.key, required this.bird, required this.onPlayAgain});
 
   final String bird;
   final VoidCallback onPlayAgain;
