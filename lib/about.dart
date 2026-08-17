@@ -111,7 +111,11 @@ class Scroller extends StatelessWidget {
                     ),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Pressed delete ${_list[index]}')),
+                    SnackBar(
+                      content: Text(
+                        'Please don\'t delete the ${_list[index]} you naughty naughty man.',
+                      ),
+                    ),
                   );
                 },
                 backgroundColor: Colors.red,
