@@ -209,7 +209,7 @@ class WinPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (String image, String description) = switch (bird) {
-      'goose' => ('assets/goose.webp', 'A bird that honks.\n'),
+      'goose' => ('assets/goose.gif', 'A bird that honks.\n'),
       'stork' => ('assets/stork.gif', 'A bird with long legs.\n'),
       'robin' => ('assets/robin.gif', 'A bird that sings songs\n'),
       _ => throw UnimplementedError('No bird gif loaded for your bird'),
